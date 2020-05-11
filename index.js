@@ -1,6 +1,11 @@
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 
+let clearSound = new Audio('./sound/line.wav')
+let pieceSound = new Audio('./sound/fall.wav')
+let gameOverSound = new Audio('./sound/gameover.wav')
+
+
 context.scale(20, 20)
 
 function arenaSweep(){
@@ -12,6 +17,7 @@ function arenaSweep(){
                 }
             }
         const row = arena.splice(y, 1)[0].fill(0)
+        clearSound.play()
         arena.unshift(row)  
         ++y
 
@@ -25,6 +31,7 @@ function collide(arena, player){
     for (let y = 0; y < m.length; y++){
         for (let x = 0; x < m[y].length; x++){
             if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0){
+                pieceSound.play()
                 return true
             } 
         }
@@ -145,6 +152,7 @@ function playerReset() {
     if (collide(arena,player)){
         arena.forEach(row => row.fill(0))
         player.score = 0
+        gameOverSound.play()
         updateScore()
     }
 }
